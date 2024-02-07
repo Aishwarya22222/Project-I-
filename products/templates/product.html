@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+ {% block main-content %}
+ {% block title %}
+ <title> Products</title>
+ {% endblock %}
+    {% for product in products %}
+    <h1>{{product.product_name}}</h1>
+    <img src="{{product.product_image}}" alt="image" width=""/>
+    {% endfor %}
+ {% endblock %}
