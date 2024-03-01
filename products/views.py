@@ -12,4 +12,4 @@ def showproduct(request):
      context = {
           'products':products
      }
-     return render(request,'product.html',context)
+     return render(request,'products/product.html',context)
