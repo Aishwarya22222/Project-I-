@@ -12,4 +12,9 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name 
     
+class Category(models.Model):
+    category_name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.category_name
