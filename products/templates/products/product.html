@@ -14,7 +14,6 @@
             <tr>
                <th>Product Name</th>
                <th>Product Price</th>
-               <th>Product Quantity</th>
                <th>Stock Quantity</th>
                <th>Product Description</th>
                <th>Product Image</th>
@@ -25,7 +24,7 @@
                <td>{{product.product_price}}</td>
                <td>{{product.stock}}</td>
                <td>{{product.product_description}}</td>
-               <td><img src="{{product.product_image}}" alt="{{product.product_name}}" width="100"></td> 
+               <td><img src="/{{product.product_image}}" alt="{{product.product_name}}" width="100"></td> 
             </tr>
             {% endfor %}
          </table>
