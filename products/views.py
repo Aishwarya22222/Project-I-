@@ -36,14 +36,14 @@ def addCategory(request):
      #to load add category form
      return render(request,'products/addcategory.html',context)
 
-
+# adding product
 def postProduct(request): 
      if request.method == 'POST':
           form = ProductForm(request.POST, request.FILES)
           if form.is_valid():
                form.save()
                messages.add_message(request, messages.SUCCESS, 'Product added successfully')
-               return redirect('/products/addproduct')
+               return redirect('/products/show')
           else:
                messages.add_message(request,messages.ERROR,'Failed to add product')
                return render(request,'products/addproduct.html',{'forms':form}) 
@@ -89,5 +89,36 @@ def updatecategory(request,category_id):
           'forms':CategoryForm(instance = instance)
      }
      return render(request,'products/updatecategory.html',context)
+
+# delete product
+def deletecategory(request,product_id):
+     product=Product.objects.get(id=product_id)
+     product.delete()
+     messages.add_message(request,messages.SUCCESS,'Product successfully deleted')
+     return redirect('/products/show')
+
+# update product
+def updateproduct(request, product_id):
+     instance = Product.objects.get(id=product_id)
+
+     if request.method == 'POST':
+          form = ProductForm(request.POST,instance=instance)
+          if form.is_valid():
+              form.save()
+              messages.add_message(request, messages.SUCCESS, 'Product Update')
+              return redirect('/products/show')
+          else:
+               messages.add_message(request,messages.ERROR,'Failed to update product')
+               return render(request,'products/updateproduct.html',{'forms':form}) 
+
+     context ={
+          'forms':ProductForm(instance = instance)
+     }
+     return render(request,'products/updateproduct.html',context)
+
+
+
+
+
 
 
