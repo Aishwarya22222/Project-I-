@@ -25,4 +25,5 @@ urlpatterns = [
     path('test/',index),
     path('products/',include('products.urls')),
     path('',include('accounts.urls')),
+    path('',include('userpage.urls')),
 ]
