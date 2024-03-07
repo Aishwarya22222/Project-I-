@@ -43,7 +43,7 @@ def postProduct(request):
           if form.is_valid():
                form.save()
                messages.add_message(request, messages.SUCCESS, 'Product added successfully')
-               return redirect('/products/show')
+               return redirect('/products/addproduct')
           else:
                messages.add_message(request,messages.ERROR,'Failed to add product')
                return render(request,'products/addproduct.html',{'forms':form}) 
@@ -91,7 +91,7 @@ def updatecategory(request,category_id):
      return render(request,'products/updatecategory.html',context)
 
 # delete product
-def deletecategory(request,product_id):
+def deleteproduct(request,product_id):
      product=Product.objects.get(id=product_id)
      product.delete()
      messages.add_message(request,messages.SUCCESS,'Product successfully deleted')
@@ -102,7 +102,7 @@ def updateproduct(request, product_id):
      instance = Product.objects.get(id=product_id)
 
      if request.method == 'POST':
-          form = ProductForm(request.POST,instance=instance)
+          form = ProductForm(request.POST,request.FILES,instance=instance)
           if form.is_valid():
               form.save()
               messages.add_message(request, messages.SUCCESS, 'Product Update')
@@ -112,7 +112,7 @@ def updateproduct(request, product_id):
                return render(request,'products/updateproduct.html',{'forms':form}) 
 
      context ={
-          'forms':ProductForm(instance = instance)
+          'forms':ProductForm(instance=instance)
      }
      return render(request,'products/updateproduct.html',context)
 
