@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Cart
 from django.contrib import messages
 from .forms import*
+import xml.etree.ElementTree as ET
+
 
 
 # Create your views here.
@@ -81,40 +83,42 @@ def order_item(request,product_id,cart_id):
         if form.is_valid():
             quantity=request.POST.get('quantity')
             price=product.product_price
-            total_price=int(quantity)*int(price)
+            total_price=(int(quantity)*int(price))
             phone_no=request.POST.get('phone_no')
             address=request.POST.get('address')
             payment_method=request.POST.get('payment_method')
             payment_status=request.POST.get('payment_status')
 
-            #order create gareko(left sideko chai model ko attribute ko name ho ani right side ko chai variable ho)
             order=Order.objects.create(
                 product=product,
                 user=user,
                 quantity=quantity,
                 total_price=total_price,
                 phone_no=phone_no,
-                address =address,
+                address=address,
                 payment_method=payment_method,
                 payment_status=payment_status
             )
             if order.payment_method=='Cash On Delivery':
                 cart=Cart.objects.get(id=cart_id)
                 cart.delete()
-                messages.add_message(request,messages.SUCCESS,'Order Success')
+                messages.add_message(request,messages.SUCCESS,'order completed')
                 return redirect('/myorder')
+            
             elif order.payment_method=='Esewa':
                 context={
                     'order':order,
                     'cart':cart_item
                 }
+
                 return render(request,'userpage/esewa_payment.html',context)
             else:
-                messages.add_message(request,messages.ERROR,'Something went wrong')
+                messages.add_message(request,messages.ERROR,'something went wrong')
                 return render(request,'userpage/orderform.html',{'forms':order})
 
     context={
         'forms':OrderForm
+
     }
     return render(request,'userpage/orderform.html',context)
 
@@ -129,6 +133,39 @@ def my_order(request):
     }
 
     return render(request,'userpage/myorder.html',context)
+
+
+
+import requests as req
+def esewa_verify(request):
+    import xml.etree.ElementTree as ET
+    o_id=request.GET.get('o_id')
+    amount=request.GET.get('amt')
+    refId=request.GET.get('reFid')
+    url=url ="https://uat.esewa.com.np/epay/main"
+    d={
+        'amt':amount,
+        'scd':'EPAYTEST',
+        'rid':refId,
+        'pid':o_id
+
+    }
+    resp = req.post(url, d)
+    root=ET.fromstring(resp.content)
+    status=root[0].text.strip()
+    if status=='Success':
+        order_id=o_id.split('_')[0]
+        order=Order.objects.get(id=order_id)
+        order.payment_status=True
+        order.save()
+        cart_id=o_id.split('_')[1]
+        cart=Cart.objects.get(id=cart_id)
+        cart.delete()
+        messages.add_message(request,messages.SUCCESS,'order successful')
+        return redirect('/order')
+    else:
+        messages.add_message(request,messages.ERROR,'failed to complete the order')
+        return redirect('/cart')
 
     
 

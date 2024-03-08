@@ -9,18 +9,18 @@ class Cart(models.Model):
 
 # order now
 class Order(models.Model):
-    PAYMENT={
-        ('Cash On Delivery','Cash On Delivery'), # agaadiko screen ma dekhauna pachhadiko database ma dekhaauna
+    PAYMENT=(
+        ('Cash On Delivery','Cash On Delivery'),
         ('Esewa','Esewa'),
-        ('Khalti','Khalti')
-    }
+        ('Khalti','Khalti'),
+    )
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     quantity=models.IntegerField()
     total_price=models.IntegerField(null=True)
     status=models.CharField(default='Pending',max_length=200)
-    payment_method=models.CharField(max_length=100, choices=PAYMENT)
+    payment_method=models.CharField(max_length=100,choices=PAYMENT)
     payment_status=models.BooleanField(default=False,null=True)
-    phone_no=models.CharField(max_length=20,validators=[MinLengthValidator(10)])
+    phone_no=models.CharField(max_length=20,validators=[MinLengthValidator(9),MaxLengthValidator(15)])
     address=models.CharField(max_length=100)
     created_at=models.DateTimeField(auto_now_add=True)

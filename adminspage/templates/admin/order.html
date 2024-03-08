@@ -1,16 +1,13 @@
-{% extends 'layout.html' %}
-{% load static %}
+{% extends 'admin/adminlayout.html' %}
 
 {% block title %}
-<title> E-commerce MyOrder </title>
-{% include 'userpage/header.html' %}
+<title> Admin - Users order</title>
 {% endblock %}
 
 
- {% block main-content %}
-
- <!-- start of cart section -->
- <div class="container">
+{% block main-content %}
+<!-- start of order section -->
+<div class="container">
     {% for msg in messages %}       
 
         {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
@@ -36,7 +33,11 @@
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Total Price</th>
+                    <th>Payment Status</th>
+                    <th>Order Status</th>
+                    <th>Payment Method</th>
                     <th>Product Image</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,7 +46,11 @@
                     <td>{{item.product.product_name}}</td>
                     <td>{{item.quantity}}</td>
                     <td>Rs.{{item.product.product_price}}</td>
+                    <td>{{item.payment_status}}</td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.payment_method}}</td>
                     <td><img src="/{{item.product.product_image}}" alt="{{item.product.product_name}}" width="35"></td>
+                    <td><a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a></td>
                     
                 </tr>
                 {% endfor%}
@@ -56,9 +61,6 @@
  </div>
 
 
- <!-- end of cart section --> 
- 
+ <!-- end of order section --> 
 
- {% include 'userpage/footer.html' %}
- {% endblock %}
- 
+{% endblock %}

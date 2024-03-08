@@ -3,12 +3,16 @@ from django.http import HttpResponse
 from .models import *
 from .forms import *
 from django.contrib import messages # yo chai messages ko laagi predefined huncha
+from django.contrib.auth.decorators import login_required
+from userpage.auth import admin_only
 
 # Create your views here.
 def index(request):
      return HttpResponse('This is from the product app')
 
 # to fetch all data from the database
+@login_required
+@admin_only
 def showproduct(request):
      products = Product.objects.all()
      context = {
@@ -17,6 +21,8 @@ def showproduct(request):
      return render(request,'products/product.html',context)
 
 # to show category form and post category
+@login_required
+@admin_only
 def addCategory(request):
      # data processing
      if request.method == 'POST':
@@ -37,6 +43,8 @@ def addCategory(request):
      return render(request,'products/addcategory.html',context)
 
 # adding product
+@login_required
+@admin_only
 def postProduct(request): 
      if request.method == 'POST':
           form = ProductForm(request.POST, request.FILES)
@@ -57,6 +65,8 @@ def postProduct(request):
 
 
 # allcategory dekhaune function
+@login_required
+@admin_only
 def showcategory(request):
      category = Category.objects.all()
      context = {
@@ -65,6 +75,8 @@ def showcategory(request):
      return render(request,'products/allcategory.html',context)
 
 # delete category
+@login_required
+@admin_only
 def deletecategory(request,category_id):
      category=Category.objects.get(id=category_id)
      category.delete()
@@ -72,6 +84,8 @@ def deletecategory(request,category_id):
      return redirect('/products/allcategory')
 
 # update category ko form dekhaune and update
+@login_required
+@admin_only
 def updatecategory(request,category_id):
      instance = Category.objects.get(id=category_id)
 
@@ -91,6 +105,8 @@ def updatecategory(request,category_id):
      return render(request,'products/updatecategory.html',context)
 
 # delete product
+@login_required
+@admin_only
 def deleteproduct(request,product_id):
      product=Product.objects.get(id=product_id)
      product.delete()
@@ -98,6 +114,8 @@ def deleteproduct(request,product_id):
      return redirect('/products/show')
 
 # update product
+@login_required
+@admin_only
 def updateproduct(request, product_id):
      instance = Product.objects.get(id=product_id)
 
@@ -115,6 +133,8 @@ def updateproduct(request, product_id):
           'forms':ProductForm(instance=instance)
      }
      return render(request,'products/updateproduct.html',context)
+
+
 
 
 

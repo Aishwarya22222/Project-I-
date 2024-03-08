@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.http import HttpResponse
+
 def index(request):
     return HttpResponse('this is a custom url page')
 
@@ -26,4 +27,5 @@ urlpatterns = [
     path('products/',include('products.urls')),
     path('',include('accounts.urls')),
     path('',include('userpage.urls')),
+    path('admins/',include('adminspage.urls')),
 ]
