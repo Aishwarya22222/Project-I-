@@ -33,7 +33,11 @@ def post_login(request):
 
             if user is not None: # khaali chhaina vane
                 login(request,user)
-                return redirect('/products/show')
+                if user.is_staff:
+                    return redirect('/admins/dashboard')
+                else:
+                    return redirect('/') 
+                
             else:
 
                 messages.add_message(request,messages.ERROR,'Username or Password does not match')
